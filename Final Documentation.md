@@ -1,40 +1,25 @@
-# Contents
+- [COVID-19 and Pharmacy Claims Counts](#covid-19-and-pharmacy-claims-counts)
+- [Beginnings](#beginnings)
+- [Cleaning Up the COVID-19 Data](#cleaning-up-the-covid-19-data)
+  * [The COVID19 Guide File](#the-covid19-guide-file)
+    + [The Guide File&#39;s Back End](#the-guide-file--39-s-back-end)
+    + [Further Back End Necessities](#further-back-end-necessities)
+  * [Pre and Post Clean Up Comparison](#pre-and-post-clean-up-comparison)
+- [Getting SASsy](#getting-sassy)
+  * [Improving Quality of Life in SAS](#improving-quality-of-life-in-sas)
+  * [Back to COVID-19 Data](#back-to-covid-19-data)
+  * [Cigna Pharmacy Data](#cigna-pharmacy-data)
+  * [Is the Breakout Necessary?](#is-the-breakout-necessary-)
+- [Combo Data Sets and Correlations](#combo-data-sets-and-correlations)
+  * [Find the Patterns](#find-the-patterns)
+    + [Why is this Happening?](#why-is-this-happening-)
+- [Shoot Your Shot](#shoot-your-shot)
+  * [Planetary Models](#planetary-models)
+  * [No Model Objects](#no-model-objects)
+- [Discussion Topics](#discussion-topics)
+- [Conclusion](#conclusion)
 
-[Beginnings 1](#_Toc43233040)
-
-[Cleaning Up the COVID-19 Data 3](#_Toc43233041)
-
-[The COVID19 Guide File 3](#_Toc43233042)
-
-[The Guide File&#39;s Back End 4](#_Toc43233043)
-
-[Further Back End Necessities 5](#_Toc43233044)
-
-[Pre and Post Clean Up Comparison 7](#_Toc43233045)
-
-[Getting SASsy 9](#_Toc43233046)
-
-[Improving Quality of Life in SAS 12](#_Toc43233047)
-
-[Back to COVID-19 Data 13](#_Toc43233048)
-
-[Cigna Pharmacy Data 18](#_Toc43233049)
-
-[Is the Breakout Necessary? 23](#_Toc43233050)
-
-[Combo Data Sets and Correlations 23](#_Toc43233051)
-
-[Find the Patterns 25](#_Toc43233052)
-
-[Why is this Happening? 27](#_Toc43233053)
-
-[Shoot Your Shot 29](#_Toc43233054)
-
-[Planetary Models 30](#_Toc43233055)
-
-[No Model Objects 31](#_Toc43233056)
-
-[Further Discussions 34](#_Toc43233057)
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 # COVID-19 and Pharmacy Claims Counts
 
