@@ -2,8 +2,9 @@
 Prediction modeling on Pharmacy Claim Counts, using COVID-19 data. Data cleanup done in VBA. EDA and modeling done in SAS.
 
 Data Sources used:
-..*COVID-19 data - John Hopkins University
-..*Pharmacy data - Cigna/ESI pharmacy data (aggregated values only)
+
+* COVID-19 data - John Hopkins University
+* Pharmacy data - Cigna/ESI pharmacy data (aggregated values only)
 
 ## Basic Info from the Author
 Hello!
