@@ -48,7 +48,7 @@ Initially, I was curious how I would be able to obtain data from Cigna, so that 
 
 After it was assured that aggregated representations of Cigna&#39;s data was the only expression of their data that we would be showing publically in any way, Cigna and ESI Management was more confident that the project would be approved, and the waiting game began. After waiting for approval, and beginning to get a better gauge on the breadth of the challenge at hand, now was a good time to discern what data was available for COVID-19. Researching on data sources available for COVID-19, showed that there were, basically, two major players. The first being the Worldometer, which is used widely for many various reporting agencies and bodies. The second, being John Hopkins University&#39;s (JHU) Center for Systems Science and Engineering, which made a very informative dashboard. Fortunately, the JHU datasets are available to the public, and provide aggregated data from multiple sources. In reviewing the JHU data sources, you can see that they even use the Worldometer&#39;s dataset in creating their main COVID-19 dashboard.
 
-![](RackMultipart20200620-4-o1vsf6_html_c6258761228627ee.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%201%20-%20JHU%20Data%20Sources.png)
 
 Armed with knowledge of the data that is available, I could begin trying to piece together a more refined version of the project, to Management. My aim was going to be to try and find any correlations with our Pharmacy data against COVID-19 data, which might be useful for Cigna Pharmacy. The potential for usefulness was not necessarily known at first, and it was decided to wait and see what could be found during EDA.
 
@@ -60,7 +60,7 @@ JHU&#39;s COVID-19 data is downloadable from their Github repository, in an asso
 
 My first step in this process, was to create an Excel file that could act as a guide for noting everything that I needed to create, or do, for the project, in various lists. I figured it would be a great place to keep track of everything, as well as make a host for VBA code that could be ran at any point, to convert all downloaded JHU delimited files. Below, you can see the main tab which kept track of options and settings for the import of the JHU files. Various issues were discovered throughout the process, which are addressed in the next few sections.
 
-![](RackMultipart20200620-4-o1vsf6_html_f3ad200c82ca79ac.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%202%20-%20Guide%20File%20Main%20Tab.png)
 
 Cell J1 (light blue highlighted cell in the above image), is a location that is used by the VBA code to hold a text value of a State from the USA, which has been read from the JHU files. Essentially, the VBA code will place a row&#39;s State value into this location, and the two cells below it will update via formulas. Those two cells (J2 and J3) below, will tell us whether to keep that row or not, and what the State&#39;s abbreviated text value is. The abbreviated text value will help us to match up information by state, later on, if we discover that we need or want to do so, as that&#39;s how it&#39;s stored in Cigna&#39;s Pharmacy tables.
 
@@ -78,41 +78,41 @@ In Column C and D, in the above image, you&#39;ll see that row 7 is a header of 
 
 Abiding by good programming practices, the first few lines of the VBA code will declare and set variables, as much as possible. Below, you can see the first line of code is making the &quot;Option Explicit,&quot; declaration. This enforces that all variables must be declared, before usage. To declare variables in VBA, we use the Dimension (Dim) command, to separate out a block of memory for the variable we want to create. After declaring all of our variables that we&#39;ll be using, we instantiate a few of them, as soon as we can, using the Set command for objects or just using an equals sign for primitive types. The range object being created, is to host a location where an Excel function can count the rows with values in them. As we move data from the JHU files, into our single Excel file that will be the final product, this number will iterate, automatically, giving us the proper row to push new data into. The Dir function on the last line, is a widely used function that provides a simple method for iterating through your directories in Windows environments. Its usage, in the manner shown below, dictates that it will return the first file it finds, that matches its simple RegEx expression. In this case, any csv files in the given directory.
 
-![](RackMultipart20200620-4-o1vsf6_html_af14d32c801a055f.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%203%20-%20Guide%20File%20VBA%20Vars.png)
 
 Now that we finished our declarations and sets for the variables that we are able to do so with, the process of looping through all of the JHU files can begin. Below, you can see that we use a Do loop to begin the process. Most of the code contains comments, describing what is happening at each line. The basic premise for the process, overall, is that we&#39;re looping through each of the JHU files, adjusting some of their layout where necessary, then pulling all rows into our final JHU file.
 
-![](RackMultipart20200620-4-o1vsf6_html_d5eadf32966ce1fe.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%204%20-%20Guide%20File%20VBA%20CCFC19%20Method.png)
 
 ### Further Back End Necessities
 
 The VBA code up to this point, was for initial expected needs to be met. It was thought, mostly, that the state abbreviations would be an absolute necessity, so no parsing of that functionality was necessary. Setting the code up as an optional feature wound up becoming unnecessary shortly after beginning to write the code. However, it was still unknown as to whether more options for running various code, or functions, would be necessary. Thus the reason for creating a section to handle optional code running on the Guide file. After observing the finalized file more closely, the realization that the removal of rows where the state was not part of the 50 contiguous states of the USA, might be something worth doing. This was the main reason for the creation of Cells D8:D10, so that it would be easy to turn on and off, these options, if the need ever arose. In the event that it becomes desired to have less intrusion on the COVID-19 data, one could simply set those values to N, and be done. Below, is the remaining code for the Main Method (CreateCombinedFileCOVID19) from the previous pictures of code. As you can see, it is checking the 2 other options to be as Y or N, then calls the methods tied to those options, if desired.
 
-![](RackMultipart20200620-4-o1vsf6_html_fd53bac76d85d0a0.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%205%20-%20Guide%20File%20VBA%20Option%20Calls.png)
 
 The method created for removing rows that did not have 1 of the 50 contiguous states in the US was called &quot;RemoveNOTStates.&quot; Below is the code for that method, and once again, you can see that the comments guide you through what is happening at each line. Basic premise here, is that the code is looping through all rows in the combined JHU file that was just made, and performing various tasks.
 
-![](RackMultipart20200620-4-o1vsf6_html_9a08a02d588a9d9e.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%206%20-%20Guide%20File%20VBA%20RNS%20Method.png)
 
 After processing all of the files in SAS, it would become a necessity to obtain the daily counts of the values from the data. In order to do this, it was necessary to update the Excel VBA code file. The daily counts could be obtain by using a simple subtraction formula, after sorting the data. Basically, sort the data by State then date, and a historic listing for each state, alphabetically, is the result. The formula we use to get the counts, is then simply checking to see if the state is the same as the previous row. If that is true, then we subtract the current row&#39;s count from the previous row, returning the daily increase/decrease of every data point from the JHU files. Below, you can see the code that does just that. There&#39;s not as much commenting on this one, because the language used in most of the lines are fairly self-explanatory as to what they&#39;re each doing. The nested &quot;With&quot; statement has several lines of code, towards the end of it, which are necessary to set when working with the Sort property of a Worksheet object. The variable &quot;longLast&quot; was set during the previous optional method, RemoveNOTStates. Since that method has always been used, it was not necessary to set it within this separate method, as the variable&#39;s scope was set to public in this Module.
 
-![](RackMultipart20200620-4-o1vsf6_html_9245f46a0a9c905.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%207%20-%20Guide%20File%20VBA%20ADC%20Method.png)
 
 ## Pre and Post Clean Up Comparison
 
 As with all Data projects of this nature, it is important to get a look at the data, before and after it has been cleaned. Below is an image from the original JHU file for 4/12/2020.
 
-![](RackMultipart20200620-4-o1vsf6_html_ea8f370630b2eed5.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%208%20-%20csv%20file%20Pre%20VBA%20Runs.png)
 
 Below is a transpose function ran on the header and the first 5 rows, along with a column I made, to show the column letter. This just looks a little bit cleaner than the above image, in some ways. You can clearly see that there are several columns which are simply not going to be used, for various reasons. The UID, ISO3, Country\_Region, Lat, and Long\_ columns are, mostly, for distinctions that we won&#39;t be needing. Many of these columns were, probably, used for placement on the JHU dashboard.
 
-![](RackMultipart20200620-4-o1vsf6_html_82d7ca8d60b8ea6e.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%209%20-%20csv%20file%20Pre%20VBA%20Runs%20transposed.png)
 
 Next, we&#39;ll take a look at the clean version of the JHU files, after they&#39;ve been combined. Notice the sort command&#39;s effect on the data, and the accuracy of the math for columns U:Z making daily increase/decrease counts possible.
 
-![](RackMultipart20200620-4-o1vsf6_html_9339049c217ba7c3.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2010%20-%20Final%20file%20Post%20VBA%20Run%20transposed.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_172bfb6a99eb045c.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2011%20-%20Final%20file%20Post%20VBA%20Run.png)
 
 # Getting SASsy
 
@@ -120,23 +120,23 @@ Now that we have a finalized version of the COVID-19 data, we can take it over t
 
 To get the data from my local laptop for work, over to the SAS Storage server, Cigna provided a program called winscp.exe. WinSCP is a simple transfer program, presumably for transferring from Windows Operating Systems to Linux or Unix based Operating Systems. In my own experience, the term &quot;scp&quot; is a secure copy command on Linux based Operating Systems. I never found out what the SAS servers OS&#39;s were, but in the end, it doesn&#39;t matter. After pushing the file onto the storage server, the below code was used to access the file and import it into the SAS workspace as a temp table. The schema title &quot;WORK&quot; is SAS storage for temporary tables. Tables created in that schema, only exist for as long as the instance of SAS that made them is running. The first line of code uses the SYSECHO function, and is similar to a console output message, or a print text feature, in most programming languages. The SYSECHO function is being used repeatedly throughout this project, to dictate when a new section, or operation, has begun.
 
-![](RackMultipart20200620-4-o1vsf6_html_8870b6b340088b82.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2012%20-%20SAS%20Code%20Import%20COVID%20File.png)
 
 After importing the file, the raw file is interpreted by SAS automatically. Similarly to many other programming languages with automated methods for importing data sets, it is not accurately able to interpret the data. The next code steps take on the challenge of further interpretation of the file, and basically reimport the data from the raw import, into a new table with the corrected formats that will be used throughout the remaining SAS project. Below, you can see that the columns are all being pulled in, and only the fields we need are being kept. The Filename column is being heavily altered, with one line of code. This particular line is using a substring method within SAS, to parse out the filename, into a date field instead. Outside of the substring created date field and State field, only the data points that were relative to counts of people, falling under the various types of categories provided by the JHU files, were kept.
 
-![](RackMultipart20200620-4-o1vsf6_html_a33666497f9ac001.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2013%20-%20SAS%20Code%20ETL%20from%20Raw%20COVID%20File.png)
 
 At the end of the &quot;CREATE TABLE&#39;s&quot; semicolon, you can see the word &quot;QUIT;&quot; This dictates the end of the &quot;PROC SQL&quot; statement at the top. Basically, SAS uses declaration functions, which act as a sort of mode declaration. &quot;PROC SQL&quot; could be interpreted as &quot;SAS is now going to begin interpreting SQL-like instructions from you.&quot; During processing, SAS will attempt to convert this code into the SQL code required by your Database (DB) of choice. After &quot;PROC SQL&quot; commands have finished, we can see another &quot;proc&quot; statement, for a &quot;contents&quot; function call. This set of code is to review the table provided in the &quot;DATA&quot; parameter&#39;s attributes, and various details about the table&#39;s setup. This includes the row and column counts, Observations and Variables, respectively, along with a plethora of other details. Below, we&#39;ll take a look at the output from both the &quot;PROC SQL&quot; and the &#39;proc contents&quot; commands.
 
 &#39;PROC SQL&#39; - CREATE TABLE command results:
 
-![](RackMultipart20200620-4-o1vsf6_html_4aa5c25ac6eae6bf.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2014%20-%20SAS%20table%20COVID_CLEAN.png)
 
 &#39;proc contents&#39; command results:
 
-![](RackMultipart20200620-4-o1vsf6_html_2a034edeb4080b4a.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2015%20-%20SAS%20proc%20contents%20COVID_CLEAN%201.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_e44fbdd117fbe6ff.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2016%20-%20SAS%20proc%20contents%20COVID_CLEAN%202.png)
 
 The last table in the &#39;proc contents&#39; command, gives us the column types and their formats, along with the label and column name for reference.
 
@@ -144,45 +144,45 @@ The last table in the &#39;proc contents&#39; command, gives us the column types
 
 After manually altering the SAS code over the first few weeks, it became desired to create some global variables. The point of adding them, was to remove the hassle of manually entering dates in, whenever new data became available. It is necessary, at this point, to simply note that this code exists, so that there is not confusion later. When the variables are used in various queries, this is where those variable&#39;s values are being set. To create globally scoped variables in SAS, you first have to list off all of the variables via a &quot;%GLOBAL&quot; declaration statement. This is the only distinction between global and local variables in SAS. Local variables can be declared and set, by using the &quot;%LET&quot; statement only. So, by declaring them as global, then setting them by using the &quot;%LET&quot; command, we accomplish making the scoping of the variable as global. The &quot;proc print&quot; command at the end of this code snippet, simply forces SAS to produce a pointless title in the Results output from running this code. The Title output can be seen below the code image. Notice that the &quot;tick&#39;s&quot; in the variable setting are not indicative of a string variable type. When using a &quot;%LET&quot; command, everything after the equal and following space characters becomes part of the variable, until SAS reads a semicolon character. The format of the dates shown below, are how SAS expects dates to be formatted, for use inside functions involving date comparisons.
 
-![](RackMultipart20200620-4-o1vsf6_html_5a91cc92238b4c3d.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2017%20-%20SAS%20Code%20Global%20Vars.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_cb812e3c872091c8.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2018%20-%20SAS%20Global%20Vars%20Test%20Results.png)
 
 ## Back to COVID-19 Data
 
 Now that we&#39;ve got some global variables setup, we can get back to the fun part of the project, where we explore our data! With COVID-19 data available in SAS tables, a good starting point was to recreate some of the more widely known stats from various news sources. Right away, I knew that New York would be a good state to focus on, since it has seen the deepest impact of COVID-19, bar none, in the USA. Below, you can see the code used to create a special temp table. This table was organized in such a way, so as to gather the final date&#39;s values for each of the JHU category types. This was accomplished by using the &quot;MAX&quot; command, rather than specifying a date, so that I did not have to try and figure out which date was going to be used anytime we updated the JHU file. The strategy of using &quot;MAX&quot; only worked for this particular EDA point. After creating the table COVID\_ST\_SUMM, the &quot;proc means&quot; function is ran on it, so that we can review the various averages of the table&#39;s columns. Below, you can see both results from the code, in their respective order.
 
-![](RackMultipart20200620-4-o1vsf6_html_81064a6e7d526858.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2019%20-%20SAS%20Code%20create%20COVID_ST_SUMM.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_cdd035367240e805.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2020%20-%20SAS%20table%20COVID_ST_SUMM.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_eda59146b27d4e3f.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2021%20-%20SAS%20proc%20means%20COVID_ST_SUMM.png)
 
 After reviewing the &quot;proc means&quot; function&#39;s results, the table&#39;s details were not very interesting to read. Considering that I know NY&#39;s counts are skewing the data drastically, a comparison of the 50 states, visually, would make for better impact. Below, you can see the &quot;proc SGPLOT&quot; function is being used to create a bar chart based on State, by Confirmed Cases count total. The first two lines of code, are forcing a graphical setting to make the &quot;SGPLOT&quot; function have a specific width and height for its print-out of the chart.
 
-![](RackMultipart20200620-4-o1vsf6_html_7d2e9258e5463d60.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2022%20-%20SAS%20Code%20proc%20sgplot%20COVID_ST_SUMM.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_db23230380ecb30d.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2023%20-%20SAS%20proc%20sgplot%20COVID_ST_SUMM%20plot.png)
 
 There we go. That&#39;s the scary data that New York experienced. New York more than doubles the counts from the second place state for confirmed cases of COVID-19. On a lighter note, this skewness was even worse, when I first started running the code to create this bar graph, around the first few weeks of this project. This means that New York has really made a dent in lowering their count of confirmed cases, up until this point.
 
 Next, I wanted to get a basic overview of the 3 main points of data from the JHU files: confirmed, recovered, and deaths. Again, this was desired because it should match output can be seen on Worldometer&#39;s website, or at least be close in comparison. While the visualization of cumulative data would be slightly interesting, the daily counts of each type of data would be preferred. For ease of creating any plots from this perspective, it was decided to pull in the columns for all fields, except state, then create however many plots would be desired.
 
-![](RackMultipart20200620-4-o1vsf6_html_e17c40eb6dea5cbe.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2024%20-%20SAS%20Code%20create%20COVID_DATE_SUMM.png)
 
 With the above table ready for use, the next step was to figure out how to display the data on a plot of some sort. The below code works with the SAS function &quot;proc gplot&quot; to create two Y-axis breakouts. The multiple function calls before the &quot;proc gplot&quot; command are defining various pieces of the plot which will be passed during the main &quot;proc gplot&quot; function call. The reason for the separation of the Y-axis onto two sides, was to make it so that the confirmed cases total could be viewed separately on a different, much larger, scale. When all 3 data points were kept on the same axis, the &quot;CONFIRMED\_TOTAL&quot; column&#39;s point values dwarfed the visibility of the other two columns for &quot;RECOVERED\_TOTAL&quot; and &quot;DEATHS\_TOTAL&quot;. Splitting the Y-axis made it so that the progression differences, for the other two points of data, were actually visibly able to be seen fluctuating. When using a single axis, the two other column&#39;s values appeared to be a never changing line along the bottom of the plot.
 
-![](RackMultipart20200620-4-o1vsf6_html_c8dce3aabc8441c0.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2025%20-%20SAS%20Code%20proc%20gplot%20COVID_DATE_SUMM%20cumulative.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_d0f3bbc7d9b07285.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2026%20-%20SAS%20proc%20gplot%20COVID_DATE_SUMM%20cumulative%20plot.png)
 
 The right side&#39;s Y-axis is for the &quot;CONFIRMED\_TOTAL&quot; count only. The left side is for the red and green (DEATHS\_TOTAL and RECOVERED\_TOTAL) stats only.
 
 While this was at least mildly interesting to see, the more informative plot would revolve around the daily counts. I find this to be the case, because the whole point of the social distancing was to &quot;lower the curve&quot; down to a level that medical facilities can actually handle. That said, the daily counts seemed to be close to mirroring the visualizations found on Worldometer&#39;s website for the same view of the data, verifying that I was aggregating the data properly. Differences found could, most likely, be attributed to the removal of rows where the various States were not retained, in the VBA code used for merging the JHU files together.
 
-![](RackMultipart20200620-4-o1vsf6_html_c927e84da35abdc1.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2027%20-%20SAS%20Code%20proc%20gplot%20COVID_DATE_SUMM.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_22a045f0641c20ce.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2028%20-%20SAS%20proc%20gplot%20COVID_DATE_SUMM%20plot.png)
 
 The confirmed daily totals line is very similar to the data we&#39;ve seen on Worldometer&#39;s site, where we were hovering at 30k confirmed daily cases, on average, for a while. Over the past month, we&#39;ve slowly dipped down to around 25-20k confirmed cases daily instead. Of notable attention, the first entry for each stat has sudden high spikes that drop, after the first day. This shows us that the first day of every stat should probably not be used, as it is a summation for all of the entries that occurred up to that first date, which we do not have data for. If you were wondering, the confirmed daily total count&#39;s first date value is far higher than the Y-axis limit of 50k, sitting at 552,194.
 
@@ -190,31 +190,31 @@ The confirmed daily totals line is very similar to the data we&#39;ve seen on Wo
 
 Now that we&#39;ve taken a basic look at the COVID-19 data from JHU, I wanted to see what data I could obtain from Cigna that might be useful. Right away, I wanted to find details about specific drugs, used to treat COVID-19. My search started online, looking for various websites that might have this information. The final location I wound up using was a webpage written on the site goodrx.com, authored by Jennifer Tran, PharmD, RPh. She listed the top 10 drugs that are, or were at the time, being used to try and treat COVID-19 to some extent. The final list she created, can be seen in my comments in the code images below. The first set of code, was used to create a table of drugs which I could sift through to see if I could find each of the drugs listed on Tran&#39;s article. In the list of the 10 drugs mentioned, the drugs which have an arrow pointing right (---\&gt;), are stating that I found a drug which had a brand name that matched with the name of the drug listed on Tran&#39;s article. So, arrow equals found, no arrow equals not found in our drug lists. For Cigna data protection, I opted to not include the results of this list, just to be safe. Ultimately it was pretty straight forward to match on the brand name, and I wound up just doing this once, just to be certain which field (BRND\_NM or LABEL\_NM) could be used for flagging specific drugs.
 
-![](RackMultipart20200620-4-o1vsf6_html_72f4ce2808edc906.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2029%20-%20SAS%20Code%20create%20DRUGS_LIST.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_abfa33fd6fe842c1.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2030%20-%20SAS%20Code%20Comments%20Results%20for%20Drug%20Search.png)
 
 With a list on hand of what Brand Names could be found in our databases, I began to sift for other information that was available. Initially there might have been a use for supply amounts as a feasible data point, if for nothing else than to see if there was a massive amount of claim counts for specific supply quantities, at the beginning of the lockdown. Which, as you can see in the image below, was also a value that was pulled in as well, &quot;CLAIM\_COUNT.&quot; State data was also pulled, to try and discern how certain states might have been effected. Lastly, an attempt was made to try to find a way to identify if specific claims may have originated from pharmacies that mainly service hospitals, rather than all other pharmacies. While a good idea that could be very useful for working with Hospitals, it wound up not being easy to flag pharmacies that way. Cigna&#39;s database had a field that would seem to specify a pharmacy as servicing a hospital mainly, but in reviewing that field, it wound up leading to a dead end for various reasons. At any rate, the entire field was completely empty aside from 2 entries, making it useless anyways.
 
 The only other method, dreamed up, was to use the address as a means of creating a match near a hospital somehow. Maybe get a list of hospital addresses, and see what could be found? This could possibly be used as a way to narrow down which pharmacies had an address that was within, or nearby, a hospital. This also wound up being difficult to implement, for several reasons. The main one being that pharmacies which I was able to find, that definitely serviced a hospital mainly, wound up, usually, having totally non-related names from the hospital, and often had an address with a totally different street name. This would mean there would have to be a system to declare a percentage match to a hospital, based on some sort of criteria. While possible, it would be a huge time suck, and in the end it wound up being thought best, to simply cut our losses instead. If nothing of use could be found from this data, Management would probably let me know.
 
-![](RackMultipart20200620-4-o1vsf6_html_a4e97467bb1b6ea0.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2031%20-%20SAS%20Code%20create%20PHARM_CLAIMS.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_2df56cc4b30fc565.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2032%20-%20SAS%20table%20PHARM_CLAIMS.png)
 
 Now that I have a list that could be used to aggregate Cigna/ESI&#39;s pharmacy data, I wanted to do some basic EDA on it. So, I decided to take a look at the brand name usage over time, and see if there has been a definite increase in usage of some of these drugs that are being used for COVID-19 treatment. Below, I created a table to be used in the graphical plotting, using the &quot;sgplot&quot; function. The column &quot;MOYR&quot; was used to create a view that would be based on Month and Year, so that the x-axis would not be overwhelmed, visibly, with dates. Then I simply summed up the claim counts per drug identified. I made sure to leave off the &quot;Other&quot; category, which would dwarf all of these specified drugs, if left in. The commented out line in the Where clause, was used to create a more narrow view, from 2019, rather than the range we wound up using in the above table&#39;s pull from 2017 onwards. The &quot;sgplot&quot; function&#39;s &quot;series&quot; method, wound up being the most interesting one to use for this particular visualization. After using the &quot;sgplot&quot; function in the earlier visualizations, my experimentation mindset dictated that I should try using the &quot;gplot&quot; function instead this time. This method wound up making it a little less cluttered with code, and provided a similarly striking visualization.
 
-![](RackMultipart20200620-4-o1vsf6_html_398592f9c0338f4.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2033%20-%20SAS%20Code%20create%20and%20sgplot%20PHARM_DRUG_DATE.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_7553c5a47ad6f7f0.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2034%20-%20SAS%20sgplot%20PHARM_DRUG_DATE%20plot.png)
 
 From the above data, you can clearly see that 2 drugs had a fairly obvious surge in claims, around the peak of the COVID-19 confirmed cases increases in March. Azithromycin (Red Line) and Hydroxy Chloroquine (Brown Line), specifically. The Hydroxy Chloroquine spike was nearly double the monthly usage up to that point, and dropped after March. A spike happened for Azithromycin, but not nearly in the same respective percentage as Hydroxy Chloroquine. The remaining drugs from Tran&#39;s list, did not appear to be as highly effected.
 
 Lastly for Cigna/ESI&#39;s pharmacy data, I had another desired visualization for EDA, concerning the day supply/quantity ordered. The code for this table creation wound up being nearly identical to the drug specific table above. Basically we just swapped out &quot;BRAND\_NAME&quot; for &quot;SUPPLY\_AMOUNT&quot; in the Select statement. This time, I also requested a grid outline for both the x and y axis.
 
-![](RackMultipart20200620-4-o1vsf6_html_f478b68b96816c2b.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2035%20-%20SAS%20Code%20create%20and%20sgplot%20PHARM_SUPPLY.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_418ef62225f9d28a.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2036%20-%20SAS%20sgplot%20PHARM_SUPPLY%20plot.png)
 
 As you can see, 30 day subscriptions top the list for this request, by and large. Right away, we notice a spike in claims for 30 day subscriptions in March, then an immediate drop. The same seems to be true, at least mildly, for 30-90 day and temp usage subscriptions. The immediate drop would probably be due to the lockdown, when nobody wants to go out anywhere, or simply is not allowed to. So, this would appear to be something that might be useful for Cigna/ESI. Due to the, seemingly, inherent nature of the 30 day subscriptions to jump around by, roughly, 20-30k per month, it is difficult to say for certain that COVID-19 was the cause for a spike here though.
 
@@ -226,45 +226,45 @@ After pulling the other information from the Cigna Pharmacy DB, further talks wi
 
 The steps used to create the combined table, involved creating two new temp tables first, then joining them together afterwards. This kept the process simple, and would allow me to have different aggregation types for each table.
 
-![](RackMultipart20200620-4-o1vsf6_html_c99cdd3475af4b68.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2037%20-%20SAS%20Code%20create%20COVID_FIN%20and%20PHARM_FIN.png)
 
 With both temp tables created, we could now just do a simple join statement to combine them.
 
-![](RackMultipart20200620-4-o1vsf6_html_8e1d1687258b396a.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2038%20-%20SAS%20Code%20create%20COVID_PHARM_FINAL.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_1620788ebfabd180.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2039%20-%20SAS%20table%20COVID_PHARM_FINAL.png)
 
 As you can see, the above table worked out to be the main table to be used for the remainder of the project. The first date of April 12th, 2020 was skipped, by using the global variable for a begin date. The cumulative totals for each JHU column wound up being dropped, after attempting to use them in finding correlations proved to be completely useless. Just to do some due diligence, a review of the basic &quot;proc contents&quot; and &quot;proc means&quot; function&#39;s output tables were reviewed. Below, some of the &quot;proc contents&quot; function&#39;s results are not being shown, in favor of simply showing the useful portions of the results and not having to redact any information.
 
-![](RackMultipart20200620-4-o1vsf6_html_fba70cc27a9d3db1.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2040%20-%20SAS%20Code%20proc%20contents%20and%20means%20COVID_PHARM_FINAL.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_2794fe97ae9742f1.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2041%20-%20SAS%20proc%20contents%20COVID_PHARM_FINAL%201.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_f756ed04618ce7d2.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2042%20-%20SAS%20proc%20contents%20COVID_PHARM_FINAL%202.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_2e0e6dc4d87cdd3e.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2043%20-%20SAS%20proc%20means%20COVID_PHARM_FINAL.png)
 
 ## Find the Patterns
 
 With a combined data table ready for usage, next it was time to figure out how SAS handles correlation determination. After researching and testing the available options for correlation determination in SAS, the basic &quot;PROC CORR&quot; function would suffice. The other various options/parameters for the function, wound up not really being terribly useful for this project&#39;s needs. Below, you can see that the &quot;PROC CORR&quot; function makes use of the graphics settings through the systemic &quot;ods&quot; function, as we set the preferred width and height. Within the function call, the option of &quot;PLOTS=MATRIX&quot; is what creates the output of charts, comparing all of the columns in the data used, to be compared against one another. This makes it easier to see if there are obvious correlations, visually, when we map the data points against each other. The parameter pass to the &quot;MATRIX&quot; option/function of &quot;HISTOGRAM&quot;, tell the &quot;PROC CORR&quot; function to create histograms of groupings of the data points, when they are compared to themselves. The &quot;NVAR=ALL&quot; parameter setting, tells the &quot;MATRIX&quot; function to use all of the columns available, in the data set being passed.
 
-![](RackMultipart20200620-4-o1vsf6_html_5aaec4154be645df.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2044%20-%20SAS%20Code%20proc%20corr%20COVID_PHARM_FINAL.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_91bf755a329ce24e.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2045%20-%20SAS%20proc%20corr%20COVID_PHARM_FINAL%201.png)
 
 As you may have noticed, the title for the above data, says &quot;Correlations BEFORE Weekend Removal.&quot; This was due to the discovery of outliers for weekend data, which we&#39;ll discuss a little later. Below, is the matrix output, which can be used to find obvious patterns in the comparison of columns to one another. You&#39;ll notice that many columns have at least some sort of pattern that they follow. Whenever you see dots that lie outside of the various groupings or lines, those are usually outliers that reduce the correlation of the two columns to one another. Since claim count is our response variable, it became the main focus for observation, more than the other columns. Ideally, at least one column that has a strong correlation with &quot;CLAIM\_COUNT,&quot; would be present. In reviewing the correlation scatter plots below, you can clearly see that there seems to be two different groupings for each variable, when plotted against the claim count data. The above table (Pearson Correlation Coefficients) which shows the correlation coefficients (top) and p-values (bottom) for each cross comparison, shows no promising results for any columns to have a correlation with CLAIM\_COUNT. The highest correlation being with DEATHS, at a measly .25815 correlation coefficient and a .07 p-value.
 
-![](RackMultipart20200620-4-o1vsf6_html_9307859f38bf4a44.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2046%20-%20SAS%20proc%20corr%20COVID_PHARM_FINAL%202.png)
 
 ### Why is this Happening?
 
 If you haven&#39;t figured it out already, the problem with the data wound up being that the weekend claim counts were severely lower than the weekday claim counts. Thus, the name for the title being &quot;BEFORE&quot; weekend removals. This is also the reason that the column &quot;WDAY&quot; was implemented, so that a filter could be placed on the data, to specifically remove the weekend dates. The below code took care of this step and, at the same time, removed the Memorial Day holiday that took place during the given timeframe on May 25th. The 26th was also removed, as that day seems to have been a &quot;catch up&quot; day which had an unusually high claim count as well. The reason for these outliers to exist is still unknown for certain. However, my work colleagues and I have agreed that the most likely cause is that the &quot;filedate&quot; which is used to create a claim, is not necessarily the same date as when the prescriptions/subscriptions were actually given to someone to use. Thus, this makes it more of an admin staff paperwork issue, rather than an oddity, per se. After removing the weekend dates, and the holiday dates, I actually dropped the WDAY column as well, because I didn&#39;t need to use it for anything else, and it just took up excess space in the &quot;proc corr&quot; output&#39;s matrix. After the column alterations, we simply rerun the same &quot;proc corr&quot; function as we previously did.
 
-![](RackMultipart20200620-4-o1vsf6_html_cd6be6e415ba5698.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2047%20-%20SAS%20Code%20proc%20corr%20COVID_PHARM_FINAL%203.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_ec82f70030c330e7.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2048%20-%20SAS%20proc%20corr%20COVID_PHARM_FINAL%204.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_d78a8a96521624f9.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2049%20-%20SAS%20proc%20corr%20COVID_PHARM_FINAL%205.png)
 
 As you can see from the above tables, the resulting correlations were much better than the previous run&#39;s results. In particular, a strong correlation was found with the CONFIRMED and DEATHS columns, of -.68630,\&lt;.0001 and -.48917,.0039 for the correlation coefficients and p-values, respectively. That said, it is safe to say that a Null Hypothesis could probably be rejected, given the extremely low p-values for both of those columns compared to claim counts. The proper method of expressing this would be:
 
@@ -278,7 +278,7 @@ Given two p-values for CONFIRMED and DEATHS totals from the JHU data are very cl
 
 Now that we are good to go with some evidence of a correlation between our COVID-19 data and the Pharmacy data, we should be able to create a prediction model that has some decent accuracy. First step for this, is to split our data into training and testing data sets. Below, you can see a simple select all statement is being used, from the same table. The global variable dateCHOP, is used to split the data into two separate tables at a specified date.
 
-![](RackMultipart20200620-4-o1vsf6_html_c1dc855f0a48ce2b.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2050%20-%20SAS%20Code%20create%20FIN_TRAIN%20and%20FIN_TEST.png)
 
 ## Planetary Models
 
@@ -292,15 +292,15 @@ First, we can see a hockey stick report. Notice that the y value is 0, and that 
 
 [http://www.wiilsu.org/EQzxioeazdFYT/SUSNov2013/Proceedings/Slides/Kuhfeld%20-%20Introducing%20Two%20New%20Advanced%20Regression%20Procedures%20-%20PROC%20ADAPTIVEREG%20and%20PROC%20QUANTSELECT.pdf](http://www.wiilsu.org/EQzxioeazdFYT/SUSNov2013/Proceedings/Slides/Kuhfeld%20-%20Introducing%20Two%20New%20Advanced%20Regression%20Procedures%20-%20PROC%20ADAPTIVEREG%20and%20PROC%20QUANTSELECT.pdf)
 
-![](RackMultipart20200620-4-o1vsf6_html_e8149db614c8eeca.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2051%20-%20SAS%20Documentation%20Hockey%20Stick%20Functions.png)
 
 Next, you can see the hinge locations, plotted on a chart, where the resulting prediction model&#39;s splines have been plotted. Notice the locations where the splines shift directions, is at the location of each hinge; and that the resulting function for y, at the top, wields all of the hinge function&#39;s added up to make the final prediction model&#39;s function. In SAS, the hinge functions are referred to as Basis functions, thus the use of the β in the prediction model&#39;s function.
 
-![](RackMultipart20200620-4-o1vsf6_html_f5b7b9cf21445094.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2052%20-%20SAS%20Documentation%20Splines%20Piecewise%20Linear%20Example.png)
 
 The topic of MARS is a grandiose one, and well beyond the scope of this paper. It was a major learning point for me, personally, during this project. For now though, let&#39;s move on and take a look at the code required to make this model in SAS.
 
-![](RackMultipart20200620-4-o1vsf6_html_8ebdf786141b801c.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2053%20-%20SAS%20Code%20adaptivereg.png)
 
 Above, you can see that a PROC call is made, then we feed in our parameters for the function. &quot;PLOTS=ALL,&quot; tells the function to create our plots with all of the available columns from the table we&#39;re passing. The &quot;SEED=10,&quot; is for reproducibility later, if desired, and serves exactly the same purpose of a seed function in R or Python. Below that, we can see the command &quot;MODEL&quot; is used, creating a &quot;formula&quot; of sorts, created with the columns we wish to attempt to use in our predictive model. You might have noticed that we&#39;re only passing 3 columns, of the 6 or 7 that we had available to us for using. The reasons for this were varied, but, essentially, the values that are not displayed kept having odd effects on the results of the prediction model. Specifically, the columns in question would sometimes have negative values, causing extreme swings of accuracy, to upwards of 50% losses. These columns could become negative, because of their natural tendency to decay. In example, the &quot;ACTIVE&quot; column would become a lower value, due to JHU wanting to keep an active cases value that had results of cases when possible. It would have been possible to not collect these values as a negative number, but would have been time consuming, and maybe not provided much value, so I opted to simply remove them. Instead, I kept the values which were always positive and seemed to be more of a cumulative total value, rather than an adjusting one.
 
@@ -310,27 +310,28 @@ In R and Python, when we create a model object, we can reference it, like it was
 
 Once we have run the below model, a slew of tables is displayed in the Results tab of the Program run in SAS. Below, we&#39;ll take a look at some of the more interesting results produced.
 
-![](RackMultipart20200620-4-o1vsf6_html_fed2caadf4b370e1.png) ![](RackMultipart20200620-4-o1vsf6_html_69ee1161db6c258f.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2054%20-%20SAS%20adaptivereg%20Fit%20Statistics.png)![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2055%20-%20SAS%20adaptivereg%20Variable%20Importance.png)
 
 The tables &quot;Fit Statistics&quot; and &quot;Variable Importance&quot; wound up being the most useful. The &quot;Fit Statistics&quot; table gives you the final selected model&#39;s stats, on the overall fit. As you can see we have a pretty good R-Square value of .9438. The &quot;Variable Importance&quot; table is useful for identifying which columns wound up carrying the most weight, in effectively predicting values. The three columns that I removed earlier, wound up wielding extremely low &quot;Importance&quot; values on this table, initially. This provided me with a desire to research why they were so low, leading to their removal. An Importance value that is closer to 100 is indicative of a stronger correlation within the prediction model.
 
-Below, we&#39;ll take a look at the returned model selection results from our ADAPTIVEREG function&#39;s results. ![](RackMultipart20200620-4-o1vsf6_html_4f17bf10674592c.png)
+Below, we&#39;ll take a look at the returned model selection results from our ADAPTIVEREG function&#39;s results.
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2056%20-%20SAS%20adaptivereg%20Model%20Selection.png)
 
 The above charts, show the progression in model selection changes that occurred. You can see that the 10-Basis14 model was the final selection, because it wielded the best overall output for a combination of Sum of Squared Error, and Cross Validation Error. Additionally SAS hands us a few more graphs which diagnose the fit of the model, in order for us to understand its accuracy more. For the top left graph, we can see that the spread of residuals is relatively minimal for all plotted points. A skew of up to 10k within a model predicting between a low of 200k and 300k is pretty good, all things considered. We also take a look at a bar chart that shows the residuals tending to be skewed on guessing higher at times, more so than lower. Though the bar chart fits into the desired bell curve for residuals, mostly. On the bottom middle chart, we get a good look at the predicted vs actual values, plotted against one another. Everything is mostly close to the line, but you can see that a larger portion of the points are under the line. This is also a demonstration of the skewness in tendency to favor higher guesses, rather than lower.
 
-![](RackMultipart20200620-4-o1vsf6_html_76c4ff93a99d3670.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2057%20-%20SAS%20adaptivereg%20Model%20Fit%20Diagnostics.png)
 
 So, the resulting output of data is easily able to be viewed in SAS, since it outputs a table for the model&#39;s predictions on the training and test data sets. The testing data sets will provide us with much more desired information at this point, so let&#39;s look at that first.
 
-![](RackMultipart20200620-4-o1vsf6_html_b225b0ac712974df.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2058%20-%20SAS%20adaptivereg%20ARAG_TEST_RESULTS.png)
 
 So, as you can see, the resulting predictions are not terribly far off their marks. Most are under 10k. However, this only wound up giving prediction numbers, when we should also have a percentage of accuracy at each row. To do this, we need to make some new columns on the table, which indicate a column to be used to create the Mean Average Error (MAE), and another column for 1-MAE to show accuracy. Below, you can see the SAS code required to create these two new columns, so that we can review the model&#39;s accuracy. Notice that we are simply creating a new table to hold the results in, and are adding the two new columns that calculate this information. The ALTER TABLE function is dropping out the values from the resulting table, for the columns that we did not use for our prediction model. After the PROC SQL is ran, we are then using the PROC MEANS function call to obtain a table which gives us our mean averages for entire columns, to obtain the final accuracy, and error rate, of our model.
 
-![](RackMultipart20200620-4-o1vsf6_html_94f9592f57ed1ac8.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2059%20-%20SAS%20Code%20multi%20ARAG_TEST_RESULTS.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_299a62d5303e1132.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2060%20-%20SAS%20table%20ARAG_TEST_RESULTS%20updated.png)
 
-![](RackMultipart20200620-4-o1vsf6_html_19de790cf7f0527.png)
+![alt text](https://github.com/Cyclonis7734/SAS_VBA_COVID-19_Pharmacy/blob/master/Final%20Paper%20pics/Pic%2061%20-%20SAS%20proc%20means%20ARAG_TEST_RESULTS%20updated.png)
 
 As you can see, we&#39;re hitting an accuracy above 95%, using this model. This is a favorable ending to a long process of exploring the COVID-19 data for correlations with Cigna/ESI pharmacy data. The resulting model will require further testing, and adjustments, but is mostly finished at this point. Management is happy!
 
