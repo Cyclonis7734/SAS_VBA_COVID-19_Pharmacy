@@ -9,4 +9,4 @@ Data Sources used:
 ## Basic Info from the Author
 Hello!
 
-This repository was created specifically to host a final paper for a Data Science Practicum course at Regis University in Colorado. The file "Final Documentation.md" contains the full paper with details on the project from beginning to end. The project was completed during an 8 week timeframe, and uses VBA for various file cleanup and merging, and SAS for the remainder of the project's needs. The project's final product goal, was to create a prediction model for estimating total claim counts, on any given day, when COVID-19 data is provided.
+This repository was created specifically to host a final paper for a Data Science Practicum course at Regis University in Colorado. The file "Final Documentation.md" contains the full paper with details on the project from beginning to end. The project was completed during an 8 week timeframe, uses VBA for various file cleanup and merging, and SAS for the remainder of the project's needs. The project's final product goal, was to create a prediction model for estimating total claim counts, on any given day, when COVID-19 data is provided.
