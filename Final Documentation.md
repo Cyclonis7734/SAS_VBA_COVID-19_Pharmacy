@@ -253,11 +253,11 @@ The problem with the data wound up being that the weekend claim counts were seve
 
 As you can see from the above tables, the resulting correlations were much better than the previous run&#39;s results. In particular, a strong correlation was found with the CONFIRMED and DEATHS columns, of -.68630,\&lt;.0001 and -.48917,.0039 for the correlation coefficients and p-values, respectively. That said, it is safe to say that a Null Hypothesis could probably be rejected, given the extremely low p-values for both of those columns compared to claim counts. The proper method of expressing this would be:
 
-**H** <sub>0</sub> = There **IS NOT** a correlation between CLAIM\_COUNT totals from Cigna/ESI pharmacy data, and at least one of the COVID-19 case counts from the JHU data.
+**H**<sub>0</sub> = There **IS NOT** a correlation between CLAIM\_COUNT totals from Cigna/ESI pharmacy data, and<br/>at least one of the COVID-19 case counts from the JHU data.
 
-**H** <sub>1</sub> = There **IS** a correlation between CLAIM\_COUNT totals from Cigna/ESI pharmacy data, and at least one of the COVID-19 case counts from the JHU data.
+**H**<sub>1</sub> = There **IS** a correlation between CLAIM\_COUNT totals from Cigna/ESI pharmacy data, and<br/>at least one of the COVID-19 case counts from the JHU data.
 
-Given two p-values for CONFIRMED and DEATHS totals from the JHU data are very close to 0, we can reject the Null Hypothesis that there is not a correlation between at least one of the COVID-19 case counts from the JHU data.
+Given that two p-values for CONFIRMED and DEATHS totals from the JHU data are very close to 0, we can reject the Null Hypothesis that there is not a correlation between at least one of the COVID-19 case counts from the JHU data.
 
 # Shoot Your Shot
 
